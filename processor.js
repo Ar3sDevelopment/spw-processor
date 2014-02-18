@@ -3,26 +3,26 @@ exports.data = function(cb) {
 	var exec = require('child_process').exec;
 	var res = {};
 
-	exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", function(err, stdout, stderr) {
+	exec("cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq", function(err, stdout) {
 		if (!err) {
 			res.frequency = stdout / 1000;
 
-			exec("cat /proc/cpuinfo | grep model", function(err, stdout, stderr) {
+			exec("cat /proc/cpuinfo | grep model", function(err, stdout) {
 				if (!err) {
 					var processorArr = stdout.split(": ");
 					res.processor = processorArr[1].replace("-compatible processor", "");
 
-					exec("cat /sys/class/thermal/thermal_zone0/temp", function(err, stdout, stderr) {
+					exec("cat /sys/class/thermal/thermal_zone0/temp", function(err, stdout) {
 						if (!err) {
 							res.cpu_temperature = Math.round(stdout / 1000).toFixed(1);
 
 							var output1 = null;
 							var output2 = null;
-							exec("cat /proc/stat", function(err, stdout, stderr) {
+							exec("cat /proc/stat", function(err, stdout) {
 								if (!err) {
 									output1 = stdout.split(/[\n\r]{1,2}/);
 									setTimeout(function() {
-										exec("cat /proc/stat", function(err, stdout, stderr) {
+										exec("cat /proc/stat", function(err, stdout) {
 											if (!err) {
 												output2 = stdout.split(/[\n\r]{1,2}/);
 												res.cpuload = 0;
@@ -51,7 +51,7 @@ exports.data = function(cb) {
 												}
 
 												res.cpuload = res.cpuload.toFixed(1);
-												exec("lscpu -p | grep '^[0-9]'", function(err, stdout, stderr) {
+												exec("lscpu -p | grep '^[0-9]'", function(err, stdout) {
 													if (!err) {
 														var split = stdout.split(/,/);
 
@@ -98,4 +98,4 @@ exports.manage_post = function(post, cb) {
 
 exports.updatetime = 1000;
 exports.title = 'CPU Info';
-exports.columns = 6;
+exports.columns = 4;
