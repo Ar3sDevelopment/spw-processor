@@ -55,7 +55,7 @@ script(type="text/javascript").
 
 	function timeoutCPUFunc()
 	{
-		$.startUpdatingWidgetJson(socket, #{user_widget.id}, '#{sid}', callbackCPUFunc, null);
+		$.startUpdatingWidgetJson(socket, #{user_widget.id}, '#{username}', callbackCPUFunc, null);
 	}
 
 	$(document).ready(function () {
